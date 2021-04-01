@@ -68,6 +68,7 @@ function createIcon() {
     $Shortcut.Save()
 }
 
+VerifGit
 
 $git | ForEach-Object {
     VerifAndInstallWithGit $PSItem
