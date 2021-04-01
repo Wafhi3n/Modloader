@@ -8,7 +8,7 @@ $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
 $env:GIT_REDIRECT_STDERR = '2>&1'
-
+$shortCutName="Civ6-BBG"
 function GetName {
     param(
         $GitName
@@ -62,7 +62,7 @@ function createIcon() {
     $targetPath = "powershell.exe"
     $Arguments = " -command `"& '"+$com+"'`""
     $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut($($desktop+"\Civ6-BBG.lnk"))
+    $Shortcut = $WshShell.CreateShortcut($($desktop+"\"+$shortCutName+".lnk"))
     $Shortcut.TargetPath = $targetPath
     $Shortcut.Arguments   = $Arguments
     $Shortcut.Save()
@@ -75,7 +75,7 @@ $git | ForEach-Object {
     Update $PSItem
 }
 
-if(!(Test-Path -Path $($desktop+"\Civ6-BBG.lnk")  -PathType Leaf )){
+if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )){
     $com=$MyInvocation.MyCommand.Path
     createIcon
     Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
