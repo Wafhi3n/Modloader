@@ -60,7 +60,7 @@ function Update {
 
 function createIcon() {
     $targetPath = "powershell.exe"
-    $Arguments = " -command `"& '"+$com+"'`""
+    $Arguments = "-ExecutionPolicy Bypass -File $com"
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($($desktop+"\"+$shortCutName+".lnk"))
     $Shortcut.TargetPath = $targetPath
