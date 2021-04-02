@@ -13,9 +13,7 @@ N'oublier pas de débloquer le script après l'avoir lu, car sinon il sera bloqu
 Pour l'ajouter sur Steam : 
 ---------------
 - Ajouter un raccourci non-steam
-- Parcourir: powershell.exe ( moi il est dans    C:\Windows\System32\WindowsPowerShell\v1.0 )
-- Ensuite vous allez dans ses proprietés, puis mettez dans les options de lancement :  
-    `-ExecutionPolicy Bypass -File [[CHEMIN VERS LE SCRIPT]]`
+- Parcourir: chercher le raccourci sur le bureau.
   
 
 
