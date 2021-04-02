@@ -93,12 +93,10 @@ function verifInstallAllMod(){
         VerifAndInstallWithGit $PSItem 
     }
 }
-
 function main(){
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
-    #$nextCheck=$date.AddSeconds(15);
-    
+   
     VerifGit
     verifInstallAllMod
     updateAllMod 0
@@ -114,10 +112,7 @@ function main(){
     While ($true){
         $LaunchPadProcess = Get-Process "LaunchPad" -ErrorAction SilentlyContinue
         $Civ6Process = Get-Process "CivilizationVI*" -ErrorAction SilentlyContinue
-        $date=Get-Date
-         
-       
-    
+        $date=Get-Date   
         if ( $Civ6Process -Or $LaunchPadProcess) {
             if ( $($date - $nextCheck) -gt 0){
                 Write-Host "Recherche de mise à jour"
@@ -127,12 +122,7 @@ function main(){
         }else {
             Write-Host "jeu eteint, au revoir" 
             exit;
-        }
-    
-    
-        # Do things lots
-        
-        # Add a pause so the loop doesn't run super fast and use lots of CPU        
+        }      
         Start-Sleep -s 5
     }
 }
