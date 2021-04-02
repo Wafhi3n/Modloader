@@ -1,4 +1,10 @@
 # UpdateGitModCiv
+Pre-requis
+---------------	
+- Avoir git https://git-scm.com/"
+- Autoriser les scripts: 
+    - lancer une console powershell en admin
+    - executer `set-executionpolicy remotesigned`
 
 C'est quoi ?
 ---------------	

@@ -32,6 +32,7 @@ function VerifGit {
     catch [System.Management.Automation.CommandNotFoundException]
     {
         "Veuillez installer git : https://git-scm.com/"
+        Start-Sleep -s 30
         exit 1;
     }
 }
