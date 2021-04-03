@@ -69,7 +69,9 @@ function Update {
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la " $tagActuel ", veuillez redemarrer le jeu et ce script."
         }
     }else{
+        if(!$GameLauched){
             Write-Host $DirName" est à jour."
+        }
     }
 }
 function createIcon() {
@@ -122,7 +124,7 @@ function main(){
             }
         }else {
             Write-Host "jeu eteint, au revoir" 
-            exit;
+            exit 0;
         }      
         Start-Sleep -s 5
     }
