@@ -18,6 +18,11 @@ function Elevation {
         exit;
     }
 }
+function refreshPath {
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") +
+                ";" +
+                [System.Environment]::GetEnvironmentVariable("Path","User")
+}
 function GetName {
     param(
         $GitName
@@ -31,9 +36,9 @@ function VerifGit {
     }
     catch [System.Management.Automation.CommandNotFoundException]
     {
-        "Veuillez installer git : https://git-scm.com/"
-        Start-Sleep -s 30
-        exit 1;
+        "Installation de git:"
+        winget install --id Git.Git -e --source winget
+        refreshPath
     }
 }
 function VerifAndInstallWithGit {
