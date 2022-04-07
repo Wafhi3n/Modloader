@@ -1,8 +1,8 @@
-﻿$git = @(
+$git = @(
          "https://github.com/iElden/BetterBalancedGame.git",
          "https://github.com/57fan/Civ6-BBS-2.git",
-         "https://github.com/d-jackthenarrator/Civ6-MPH.git",
-         "https://github.com/d-jackthenarrator/Civ6-BSM.git"
+         "https://github.com/iElden/MultiplayerHelper.git",
+         "https://github.com/iElden/BetterSpectatorMod.git"
        )
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
