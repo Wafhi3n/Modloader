@@ -1,6 +1,4 @@
-﻿#Get-NetConnectionProfile
-
-$git = @(
+﻿$git = @(
          @("iElden","BetterBalancedGame"),
          @("57fan","Civ6-BBS-2"),
          @("iElden","MultiplayerHelper"),
@@ -81,7 +79,6 @@ function LatestTag {
         $rez = Invoke-RestMethod $url
         $tagName=$rez.tag_name
     }Catch{
-        #$tagName=$(git describe --tags (git rev-list --tags --max-count=1))
         $tagName=""
     }
     $tagName
