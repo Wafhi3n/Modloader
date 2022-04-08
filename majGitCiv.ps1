@@ -41,18 +41,45 @@ function VerifGit {
         refreshPath
     }
 }
+function CloneMod{
+    param (
+        $mod
+    )
+    $lasTag = LatestTag $mod
+    $url=$repoUrl+$mod[0]+"/"+$mod[1]
+    if ($lasTag -ne ""){
+        git clone $url --branch $lastag --single-branch
+
+    }else{
+        git clone $url --single-branch
+    }
+}
 function VerifAndInstallWithGit {
     param (
         $Mod
     )
-    $DirName=GetName $Mod
+    $DirName=$Mod[1]
     $TotalPath=$dirMod+"\"+$DirName
     if (!(Test-Path -Path $TotalPath -PathType Container )) {
         Write-Host $DirName" - non installé dans :"$TotalPath;
         Write-Host "installation avec git clone..."
         Set-Location $dirMod
-        git clone $Mod
+        CloneMod $Mod
     }          
+}
+function LatestTag {
+    param (
+        $mod
+    )
+    $url=$apiurl+"/"+$mod[0]+"/"+$mod[1]+"/releases/latest"
+    $tagName=""
+    Try{
+        $rez = Invoke-RestMethod $url
+        $tagName=$rez.tag_name
+    }Catch{
+        #$tagName=$(git describe --tags (git rev-list --tags --max-count=1))
+    }
+    $tagName
 }
 function Update {
     param (
@@ -63,12 +90,12 @@ function Update {
     $TotalPath=$dirMod+"\"+$DirName
     Set-Location $TotalPath
     git fetch --tags
-    $latesttag=$(git describe --tags (git rev-list --tags --max-count=1))
+    $latesttag=$(LatestTag $mod)
     $tagActuel=git describe --tags
     if($latesttag -ne $tagActuel){
         if(!$GameLauched){
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la" $tagActuel
-            git -c advice.detachedHead=false checkout $latesttag
+            git -c advice.detachedHead=false checkout $('tags/'+$latesttag)
         }else{
             $voice.speak($("Maj necessaire de "+$DirName+" "+$latesttag+" depuis la "+$tagActuel+", veuillez redemarrer Civilisation son script."))
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la " $tagActuel ", veuillez redemarrer le jeu et ce script."
@@ -142,28 +169,3 @@ function main(){
 }
 
 main
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
- 
