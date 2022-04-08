@@ -1,4 +1,4 @@
-﻿$git = @(
+$git = @(
          @("iElden","BetterBalancedGame"),
          @("57fan","Civ6-BBS-2"),
          @("iElden","MultiplayerHelper"),
