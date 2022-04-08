@@ -1,4 +1,6 @@
-﻿$git = @(
+﻿#Get-NetConnectionProfile
+
+$git = @(
          @("iElden","BetterBalancedGame"),
          @("57fan","Civ6-BBS-2"),
          @("iElden","MultiplayerHelper"),
@@ -50,7 +52,7 @@ function CloneMod{
     $lasTag = LatestTag $mod
     $url=$repoUrl+$mod[0]+"/"+$mod[1]
     if ($lasTag -ne ""){
-        git clone $url --branch $lastag --single-branch
+        git clone $url --branch $('tags/'+$lasTag) --single-branch
 
     }else{
         git clone $url --single-branch
@@ -80,6 +82,7 @@ function LatestTag {
         $tagName=$rez.tag_name
     }Catch{
         #$tagName=$(git describe --tags (git rev-list --tags --max-count=1))
+        $tagName=""
     }
     $tagName
 }
@@ -97,7 +100,12 @@ function Update {
     if($latesttag -ne $tagActuel){
         if(!$GameLauched){
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la" $tagActuel
-            git -c advice.detachedHead=false checkout $('tags/'+$latesttag)
+            if ($latesttag -ne ""){
+                git -c advice.detachedHead=false checkout $('tags/'+$latesttag)
+            }else{
+                git -c advice.detachedHead=false checkout 
+
+            }
         }else{
             $voice.speak($("Maj necessaire de "+$DirName+" "+$latesttag+" depuis la "+$tagActuel+", veuillez redemarrer Civilisation son script."))
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la " $tagActuel ", veuillez redemarrer le jeu et ce script."
