@@ -1,9 +1,11 @@
 $git = @(
-         "https://github.com/iElden/BetterBalancedGame.git",
-         "https://github.com/57fan/Civ6-BBS-2.git",
-         "https://github.com/iElden/MultiplayerHelper.git",
-         "https://github.com/iElden/BetterSpectatorMod.git"
-       )
+         @("iElden","BetterBalancedGame"),
+         @("57fan","Civ6-BBS-2"),
+         @("iElden","MultiplayerHelper"),
+         @("iElden","BetterSpectatorMod")
+       )    
+$apiurl="https://api.github.com/repos"
+$repoUrl="https://github.com/"
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
@@ -41,18 +43,45 @@ function VerifGit {
         refreshPath
     }
 }
+function CloneMod{
+    param (
+        $mod
+    )
+    $lasTag = LatestTag $mod
+    $url=$repoUrl+$mod[0]+"/"+$mod[1]
+    if ($lasTag -ne ""){
+        git clone $url --branch $('tags/'+$lasTag) --single-branch
+
+    }else{
+        git clone $url --single-branch
+    }
+}
 function VerifAndInstallWithGit {
     param (
         $Mod
     )
-    $DirName=GetName $Mod
+    $DirName=$Mod[1]
     $TotalPath=$dirMod+"\"+$DirName
     if (!(Test-Path -Path $TotalPath -PathType Container )) {
         Write-Host $DirName" - non installé dans :"$TotalPath;
         Write-Host "installation avec git clone..."
         Set-Location $dirMod
-        git clone $Mod
+        CloneMod $Mod
     }          
+}
+function LatestTag {
+    param (
+        $mod
+    )
+    $url=$apiurl+"/"+$mod[0]+"/"+$mod[1]+"/releases/latest"
+    $tagName=""
+    Try{
+        $rez = Invoke-RestMethod $url
+        $tagName=$rez.tag_name
+    }Catch{
+        $tagName=""
+    }
+    $tagName
 }
 function Update {
     param (
@@ -63,12 +92,17 @@ function Update {
     $TotalPath=$dirMod+"\"+$DirName
     Set-Location $TotalPath
     git fetch --tags
-    $latesttag=$(git describe --tags (git rev-list --tags --max-count=1))
+    $latesttag=$(LatestTag $mod)
     $tagActuel=git describe --tags
     if($latesttag -ne $tagActuel){
         if(!$GameLauched){
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la" $tagActuel
-            git -c advice.detachedHead=false checkout $latesttag
+            if ($latesttag -ne ""){
+                git -c advice.detachedHead=false checkout $('tags/'+$latesttag)
+            }else{
+                git -c advice.detachedHead=false checkout 
+
+            }
         }else{
             $voice.speak($("Maj necessaire de "+$DirName+" "+$latesttag+" depuis la "+$tagActuel+", veuillez redemarrer Civilisation son script."))
             Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la " $tagActuel ", veuillez redemarrer le jeu et ce script."
@@ -136,28 +170,3 @@ function main(){
 }
 
 main
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
- 
