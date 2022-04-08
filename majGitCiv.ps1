@@ -1,9 +1,13 @@
+#Get-NetConnectionProfile
+
 $git = @(
-         "https://github.com/iElden/BetterBalancedGame.git",
-         "https://github.com/57fan/Civ6-BBS-2.git",
-         "https://github.com/iElden/MultiplayerHelper.git",
-         "https://github.com/iElden/BetterSpectatorMod.git"
-       )
+         @("iElden","BetterBalancedGame"),
+         @("57fan","Civ6-BBS-2"),
+         @("iElden","MultiplayerHelper"),
+         @("iElden","BetterSpectatorMod")
+       )    
+$apiurl="https://api.github.com/repos"
+$repoUrl="https://github.com/"
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
@@ -77,7 +81,6 @@ function LatestTag {
         $rez = Invoke-RestMethod $url
         $tagName=$rez.tag_name
     }Catch{
-        #$tagName=$(git describe --tags (git rev-list --tags --max-count=1))
         $tagName=""
     }
     $tagName
