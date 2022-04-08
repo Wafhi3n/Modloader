@@ -50,7 +50,7 @@ function CloneMod{
     $lasTag = LatestTag $mod
     $url=$repoUrl+$mod[0]+"/"+$mod[1]
     if ($lasTag -ne ""){
-        git clone $url --branch $('tags/'+$lasTag) --single-branch
+        git clone $url --branch $lasTag --single-branch
 
     }else{
         git clone $url --single-branch
