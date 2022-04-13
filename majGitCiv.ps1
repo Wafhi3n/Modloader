@@ -16,6 +16,14 @@ $shortCutName="Civ6-BBG"
 $com=$MyInvocation.MyCommand.Path
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
+[Int]$LABEL_Y_SIZE = 32
+[Int]$LABEL_X_SIZE = 16
+[Int]$PANEL_X_SIZE = 500
+[Int]$PANEL_Y_SIZE = 200
+[Int]$WINDOW_X_SIZE = 800
+[Int]$WINDOW_Y_SIZE = 600
+
+
 function Elevation {
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -File $com";
@@ -206,7 +214,7 @@ function labelNomMod(){
     # Font styles are: Regular, Bold, Italic, Underline, Strikeout
     $label.Font = $Font
 
-    $label.Size =New-Object System.Drawing.Size(300, 32);
+    $label.Size =New-Object System.Drawing.Size(300, $LABEL_Y_SIZE);
     $label.BackColor = $([System.Drawing.Color]::blue)
     return $label
 }
@@ -236,7 +244,9 @@ function setPanelMod(){
 
     $panelMod = New-Object  System.Windows.Forms.Panel
     $panelMod.Location = New-Object System.Drawing.Point(0,0);
-    $panelMod.Size = New-Object System.Drawing.Size(500, 200);
+    $panelMod.Size = New-Object System.Drawing.Size($PANEL_X_SIZE, $PANEL_Y_SIZE);
+
+
     $panelMod.BackColor = $([System.Drawing.Color]::lightblue)
 
     #$labelisOK =   VerifModGit $mod
@@ -262,10 +272,14 @@ function setPanelMod(){
 function addModToPanel(){
     param(
         $panelMod,
-        $mod
+        $mod,
+        [int]$position
     )
-    $labelNomMod = labelNomMod $mod 16 16
-    $ButtonCheckMod = buttonCheckMod $mod 366 16
+    Write-Host $position 
+    [int]$y = ($position-1)*$LABEL_Y_SIZE +3*$position;
+    [int]$xButtonCheckMod = 350 + $LABEL_X_SIZE;
+    $labelNomMod = labelNomMod $mod $LABEL_X_SIZE $y
+    $ButtonCheckMod = buttonCheckMod $mod $xButtonCheckMod $y
     $panelMod.Controls.Add($labelNomMod);
     $panelMod.Controls.Add($ButtonCheckMod);
 }
@@ -275,12 +289,16 @@ function mainUI(){
 
     $main_form = New-Object System.Windows.Forms.Form
     $main_form.Text ='Launcher Civ-FR'
-    $main_form.Width = 800
-    $main_form.Height = 600
+    $main_form.Width = $WINDOW_X_SIZE
+    $main_form.Height = $WINDOW_Y_SIZE
     $main_form.AutoSize = $false
 
     $panelMod = setPanelMod $main_form;
-    addModToPanel $panelMod $git[0]
+    [int]$cpt=0
+    $git | ForEach-Object {
+        $cpt++
+        addModToPanel $panelMod $PSItem $cpt
+    }
 
 
     $main_form.ShowDialog()
