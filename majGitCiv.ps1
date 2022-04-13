@@ -1,5 +1,3 @@
-#Get-NetConnectionProfile
-
 $git = @(
          @("iElden","BetterBalancedGame"),
          @("57fan","Civ6-BBS-2"),
@@ -12,100 +10,20 @@ $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
 $env:GIT_REDIRECT_STDERR = '2>&1'
-$shortCutName="Civ6-BBG"
 $com=$MyInvocation.MyCommand.Path
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
-[Int]$LABEL_Y_SIZE = 32
-[Int]$LABEL_X_SIZE = 16
-[Int]$PANEL_X_SIZE = 500
-[Int]$PANEL_Y_SIZE = 200
-[Int]$WINDOW_X_SIZE = 800
-[Int]$WINDOW_Y_SIZE = 600
 
+try {
+    . ("$PSScriptRoot/settings.ps1")
+    . ("$PSScriptRoot/CommonFct.ps1")
+    . ("$PSScriptRoot/Git.ps1")
+    . ("$PSScriptRoot/old.ps1")
+}
+catch {
+    Write-Host "Error while loading supporting PowerShell Scripts" 
+}
 
-function Elevation {
-    if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -File $com";
-        exit;
-    }
-}
-function refreshPath {
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") +
-                ";" +
-                [System.Environment]::GetEnvironmentVariable("Path","User")
-}
-function GetName {
-    param(
-        $GitName
-    )
-     $GitName.Split('/')[-1].Split('.')[0]
-}
-function VerifGit {
-    try
-    {
-        git | Out-Null
-    }
-    catch [System.Management.Automation.CommandNotFoundException]
-    {
-        "Installation de git:"
-        winget install --id Git.Git -e --source winget
-        refreshPath
-    }
-}
-function CloneMod{
-    param (
-        $mod
-    )
-    $lasTag = LatestTag $mod
-    $url=$repoUrl+$mod[0]+"/"+$mod[1]
-    if ($lasTag -ne ""){
-        git clone $url --branch $lasTag --single-branch
-
-    }else{
-        git clone $url --single-branch
-    }
-}
-function VerifAndInstallWithGit {
-    param (
-        $Mod
-    )
-    $DirName=$Mod[1]
-    $TotalPath=$dirMod+"\"+$DirName
-    if (!(Test-Path -Path $TotalPath -PathType Container )) {
-        Write-Host $DirName" - non installé dans :"$TotalPath;
-        Write-Host "installation avec git clone..."
-        Set-Location $dirMod
-        CloneMod $Mod
-    }          
-}
-function VerifModGit{
-    param (
-        $Mod
-    )
- 
-    $DirName=$Mod[1]
-    $TotalPath=$dirMod+"\"+$DirName
-    if (!(Test-Path -Path $TotalPath -PathType Container )) {
-        Write-Host $DirName" - non installé dans :"$TotalPath;
-        Write-Host "installation necessaire"
-        return $false
-    }     
-}
-function LatestTag {
-    param (
-        $mod
-    )
-    $url=$apiurl+"/"+$mod[0]+"/"+$mod[1]+"/releases/latest"
-    $tagName=""
-    Try{
-        $rez = Invoke-RestMethod $url
-        $tagName=$rez.tag_name
-    }Catch{
-        $tagName=""
-    }
-    $tagName
-}
 function Update {
     param (
         $Mod,
@@ -275,7 +193,7 @@ function addModToPanel(){
         $mod,
         [int]$position
     )
-    Write-Host $position 
+    #Write-Host $position 
     [int]$y = ($position-1)*$LABEL_Y_SIZE +3*$position;
     [int]$xButtonCheckMod = 350 + $LABEL_X_SIZE;
     $labelNomMod = labelNomMod $mod $LABEL_X_SIZE $y
@@ -283,6 +201,26 @@ function addModToPanel(){
     $panelMod.Controls.Add($labelNomMod);
     $panelMod.Controls.Add($ButtonCheckMod);
 }
+function addLaunchButtonToForm(){
+    param(
+        $main_form
+    )
+    $Button = New-Object System.Windows.Forms.Button;
+
+    #[double]$y = [double]$WINDOW_Y_SIZE - 32
+    #[double]$x = [double]$WINDOW_X_SIZE 
+$x= 200
+$y = 200
+    $Button.Location = New-Object System.Drawing.Size($x, $y)
+    $Button.Size = New-Object System.Drawing.Size(150,23)
+    $Button.Text = "LANCER CIVILIZATION"
+    $Button.BackColor = $([System.Drawing.Color]::red)
+
+    $main_form.Controls.Add($Button)
+    return $Button
+}
+
+
 function mainUI(){
     Add-Type -assembly System.Windows.Forms
     Add-Type -assembly System.Drawing
@@ -299,10 +237,12 @@ function mainUI(){
         $cpt++
         addModToPanel $panelMod $PSItem $cpt
     }
+    $launchButton = addLaunchButtonToForm $main_form
 
 
     $main_form.ShowDialog()
 
 }
 
-mainUI
+#mainUI
+checkInstallFont
