@@ -71,6 +71,19 @@ function VerifAndInstallWithGit {
         CloneMod $Mod
     }          
 }
+function VerifModGit{
+    param (
+        $Mod
+    )
+ 
+    $DirName=$Mod[1]
+    $TotalPath=$dirMod+"\"+$DirName
+    if (!(Test-Path -Path $TotalPath -PathType Container )) {
+        Write-Host $DirName" - non installé dans :"$TotalPath;
+        Write-Host "installation necessaire"
+        return $false
+    }     
+}
 function LatestTag {
     param (
         $mod
@@ -177,4 +190,101 @@ function main(){
     }
 }
 
-main
+
+
+function labelNomMod(){
+    param(
+        $mod,
+        $x,
+        $y
+    )
+    $label = New-Object  System.Windows.Forms.Label
+    # Initialize the Label and TextBox controls.
+    $label.Location = New-Object System.Drawing.Point($x,$y);
+    $label.Text = $mod[1];
+    $Font = New-Object System.Drawing.Font("Verdana",20,[System.Drawing.FontStyle]::Italic)
+    # Font styles are: Regular, Bold, Italic, Underline, Strikeout
+    $label.Font = $Font
+
+    $label.Size =New-Object System.Drawing.Size(300, 32);
+    $label.BackColor = $([System.Drawing.Color]::blue)
+    return $label
+}
+function buttonCheckMod
+(){
+    param(
+        $mod,
+        $x,
+        $y
+    )
+    $Button = New-Object System.Windows.Forms.Button
+    $Button.Location = New-Object System.Drawing.Size($x,$($y-3.5))
+    $Button.Size = New-Object System.Drawing.Size(150,23)
+    $Button.Text = "Getting Status info..."
+    $Button.BackColor = $([System.Drawing.Color]::red)
+
+    $main_form.Controls.Add($Button)
+    return $Button
+
+}
+
+
+function setPanelMod(){
+    param(
+        $main_form
+    )
+
+    $panelMod = New-Object  System.Windows.Forms.Panel
+    $panelMod.Location = New-Object System.Drawing.Point(0,0);
+    $panelMod.Size = New-Object System.Drawing.Size(500, 200);
+    $panelMod.BackColor = $([System.Drawing.Color]::lightblue)
+
+    #$labelisOK =   VerifModGit $mod
+
+
+    #$textBox1.Location = New-Object System.Drawing.Point(16,32);
+    #$textBox1.Text = "";
+    #$textBox1.Size = New-Object System.Drawing.Size(152, 20);
+ 
+    # Add the Panel control to the form.
+
+
+    $main_form.Controls.Add($panelMod);
+    # Add the Label and TextBox controls to the Panel.
+    #$panel1.Controls.Add($textBox1);
+    
+
+
+
+    return $panelMod
+}
+#main
+function addModToPanel(){
+    param(
+        $panelMod,
+        $mod
+    )
+    $labelNomMod = labelNomMod $mod 16 16
+    $ButtonCheckMod = buttonCheckMod $mod 366 16
+    $panelMod.Controls.Add($labelNomMod);
+    $panelMod.Controls.Add($ButtonCheckMod);
+}
+function mainUI(){
+    Add-Type -assembly System.Windows.Forms
+    Add-Type -assembly System.Drawing
+
+    $main_form = New-Object System.Windows.Forms.Form
+    $main_form.Text ='Launcher Civ-FR'
+    $main_form.Width = 800
+    $main_form.Height = 600
+    $main_form.AutoSize = $false
+
+    $panelMod = setPanelMod $main_form;
+    addModToPanel $panelMod $git[0]
+
+
+    $main_form.ShowDialog()
+
+}
+
+mainUI
