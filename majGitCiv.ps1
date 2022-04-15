@@ -82,8 +82,9 @@ function Update {
 function createIcon() {
     $targetPath = "powershell.exe"
     $Arguments = "-ExecutionPolicy Bypass -File $com"
+    $Path=$($desktop+"\"+$shortCutName+".lnk")
     $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut($($desktop+"\"+$shortCutName+".lnk"))
+    $Shortcut = $WshShell.CreateShortcut($Path)
     $Shortcut.TargetPath = $targetPath
     $Shortcut.Arguments  = $Arguments
     $Shortcut.Save()
@@ -106,15 +107,20 @@ function main(){
     $nextCheck=$date.AddMinutes(30);
    
     VerifGit
-    verifInstallAllMod
-    updateAllMod 0
+
+    $git | ForEach-Object {
+        VerifAndInstallWithGit $PSItem;
+        Update  $PSItem 0 ;
+    }
+
     
     if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )){
         createIcon
         Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
     }
-    
-    Start-Process steam://rungameid/289070
+
+    Write-Host "lancement de CIV6 avec steam..."
+    Start-Process steam://rungameid/289070 %command%
     Start-Sleep -s 30
 
     While ($true){
