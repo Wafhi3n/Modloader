@@ -1,3 +1,8 @@
+param(
+    [Parameter()]
+    [String]$isShortcut
+)
+
 $git = @(
          "https://github.com/iElden/BetterBalancedGame.git",
          "https://github.com/57fan/Civ6-BBS-2.git",
@@ -12,6 +17,8 @@ $shortCutName="Civ6-BBG"
 $com=$MyInvocation.MyCommand.Path
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
+#Process.StartInfo.UseShellExecute = true;
+#Process.StartInfo.Verb = "runas";
 function Elevation {
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -File $com";
@@ -81,7 +88,7 @@ function Update {
 }
 function createIcon() {
     $targetPath = "powershell.exe"
-    $Arguments = "-ExecutionPolicy Bypass -File $com"
+    $Arguments = "-ExecutionPolicy Bypass -File $com -shortcut"
     $Path=$($desktop+"\"+$shortCutName+".lnk")
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($Path)
@@ -106,7 +113,10 @@ function main(){
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
    
-    VerifGit
+    if ($isShortcut -ne "shotcut"){
+        VerifGit
+    }
+    
 
     $git | ForEach-Object {
         VerifAndInstallWithGit $PSItem;
@@ -120,9 +130,15 @@ function main(){
     }
 
     Write-Host "lancement de CIV6 avec steam..."
-    Start-Process steam://rungameid/289070 %command%
-    Start-Sleep -s 30
+    #$PathLaucher = Get-Item -Path "Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\bam\State\UserSettings\S-1-5-21-2093352941-3441766457-1795707191-1001\Device\HarddiskVolume2\SteamLibrary\steamapps\common\Sid Meier's Civilization VI\2KLauncher\LauncherPatcher.exe" | Select-Object -ExpandProperty Property
+    #$PathCIV6 = Get-Item -Path "Registry::\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\bam\State\UserSettings\S-1-5-21-2093352941-3441766457-1795707191-1001\\Device\HarddiskVolume2\SteamLibrary\steamapps\common\Sid Meier's Civilization VI\Base\Binaries\Win64Steam\CivilizationVI.exe" | Select-Object -ExpandProperty Property
+    #Write-Host $PathLaucher;
+    #exit 0;
+    
+    write-host $isShortcut
 
+    Start-Process "steam://rungameid/289070"
+    Start-Sleep -s 30
     While ($true){
         $LaunchPadProcess = Get-Process "LaunchPad" -ErrorAction SilentlyContinue
         $Civ6Process = Get-Process "CivilizationVI*" -ErrorAction SilentlyContinue
