@@ -136,7 +136,6 @@ function main(){
     #exit 0;
     
     write-host $isShortcut
-
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
     While ($true){
