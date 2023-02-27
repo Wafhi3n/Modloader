@@ -1,9 +1,12 @@
 # UpdateGitModCiv
+
 Prérequis
 ---------------
 - Autoriser les scripts si nécessaire :
     - lancer une console powershell en admin
     - exécuter `set-executionpolicy remotesigned`
+
+Vous pouvez aussi directement le lancer en faisant clic droit lancer avec power shell et autoriser l'execution du script.
 
 C'est quoi ?
 ---------------
