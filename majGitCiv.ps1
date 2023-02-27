@@ -129,13 +129,8 @@ function main(){
         Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
     }
 
-    Write-Host "lancement de CIV6 avec steam..."
-    #$PathLaucher = Get-Item -Path "Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\bam\State\UserSettings\S-1-5-21-2093352941-3441766457-1795707191-1001\Device\HarddiskVolume2\SteamLibrary\steamapps\common\Sid Meier's Civilization VI\2KLauncher\LauncherPatcher.exe" | Select-Object -ExpandProperty Property
-    #$PathCIV6 = Get-Item -Path "Registry::\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\bam\State\UserSettings\S-1-5-21-2093352941-3441766457-1795707191-1001\\Device\HarddiskVolume2\SteamLibrary\steamapps\common\Sid Meier's Civilization VI\Base\Binaries\Win64Steam\CivilizationVI.exe" | Select-Object -ExpandProperty Property
-    #Write-Host $PathLaucher;
-    #exit 0;
-    
-    write-host $isShortcut
+    Write-Host "lancement de CIV6 avec steam..." 
+   
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
     While ($true){
