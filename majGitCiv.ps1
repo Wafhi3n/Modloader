@@ -122,7 +122,7 @@ $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
 if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"))){
     Write-Host "Le Modloader n'est pas installé"
     $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
-    $shortCutName = "Civ6-BBG"
+    $shortCutName = "Civilization VI - CivFR"
     $com = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
     #Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
         VerifGit
