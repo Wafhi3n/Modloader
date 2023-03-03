@@ -1,6 +1,6 @@
 param(
     [Parameter()]
-    [String]$isShortcut
+    [String]$isInstaller
 )
 #Fonction#
 function VerifGit {
@@ -50,7 +50,8 @@ function Update {
     param (
         $Mod,
         $GameLauched,
-        $Path
+        $Path,
+        $modloader
     )
     $DirName=GetName $Mod
     $TotalPath=$Path+"\"+$DirName
@@ -77,7 +78,7 @@ function UpdateMod {
         $Mod,
         $GameLauched
     )
-    Update $Mod $GameLauched $dirMod
+    Update $Mod $GameLauched $dirMod 0
 }
 function createIcon() {
     $targetPath = "powershell.exe"
@@ -130,6 +131,7 @@ if((Test-Path -Path $($PSScriptRoot+"\settings.psd1"))){
 $git = $ConfigFile.git 
 $shortCutName=$ConfigFile.shortCutName
 $dirDocCivVI=$documents+$ConfigFile.mygameCivVI
+$gitUpdategitCiv = $documents+$ConfigFile.gitUpdategitCiv
 $dirMod=$dirDocCivVI+"\Mods"
 
 $env:GIT_REDIRECT_STDERR = '2>&1'
@@ -160,6 +162,9 @@ function main(){
         UpdateMod  $PSItem 0 ;
     }
 
+    if ($isInstaller = "byInstaller"){
+        Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
+    }
     Write-Host "lancement de CIV6 avec steam..."
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
