@@ -6,7 +6,7 @@ Prérequis
     - lancer une console powershell en admin
     - exécuter `set-executionpolicy remotesigned`
 
-Vous pouvez aussi directement le lancer en faisant clic droit lancer avec power shell et autoriser l'execution du script.
+Vous pouvez aussi directement le lancer en faisant clic droit lancer avec power shell et autoriser l'execution du script aprés avoir débloqué le fichier dans ses propriétés.
 
 C'est quoi ?
 ---------------
