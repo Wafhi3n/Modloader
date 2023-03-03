@@ -168,8 +168,6 @@ $voice.rate = 0
 
 function main(){
 
-    "main"
-
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
 
