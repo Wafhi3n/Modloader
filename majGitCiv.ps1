@@ -2,22 +2,29 @@ param(
     [Parameter()]
     [String]$isShortcut
 )
-$gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
-$git = @(
-         "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git",
-         "https://github.com/57fan/Civ6-BBS-2.git",
-         "https://github.com/CivilizationVIBetterBalancedGame/MultiplayerHelper.git",
-         "https://github.com/CivilizationVIBetterBalancedGame/BetterSpectatorMod.git"
-       )
+#Conf
+try {
+    $ConfigFile = Import-PowerShellDataFile -Path "D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
+}catch{
+    "Probléme avec le fichier de conf."
+    exit 0;
+}
+    
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
-$dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
-$dirDocCivVI=$documents+"\My Games\Sid Meier's Civilization VI"
+$git = $ConfigFile.git 
+$shortCutName=$ConfigFile.shortCutName
+$gitUpdategitCiv=$ConfigFile.gitUpdategitCiv
+$dirDocCivVI=$documents+$ConfigFile.mygameCivVI
+$dirMod=$dirDocCivVI+"\Mods"
+
 $env:GIT_REDIRECT_STDERR = '2>&1'
-$shortCutName="Civ6-BBG"
-$com="D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
+$com=$MyInvocation.MyCommand.Path
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
+
+
+
 
 function Elevation {
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -106,7 +113,8 @@ function UpdateMod {
 }
 function createIcon() {
     $targetPath = "powershell.exe"
-    $Arguments = "-ExecutionPolicy Bypass -File $com shortcut"
+    $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'"shortcut"'
+    $Arguments
     $Path=$($desktop+"\"+$shortCutName+".lnk")
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($Path)
@@ -130,17 +138,19 @@ function verifInstallAllMod(){
 function main(){
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
-   
+
+#Verification du dossier de mod
+
+#Verification de Git   
     if ($isShortcut -ne "shotcut"){
         VerifGit
     }
-    
+
 #Verification de Modloader
     if ($git){
         VerifAndInstallWithGit $gitUpdategitCiv $dirDocCivVI
         Update  $gitUpdategitCiv 0 $dirDocCivVI
     }
-
 
 #Verification des Mods
     $git | ForEach-Object {
@@ -148,8 +158,8 @@ function main(){
         UpdateMod  $PSItem 0 ;
     }
 
-
-    if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )){
+#Verification de la presence de l'icone
+    if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )-and $isShortcut -ne "shotcut"){
         createIcon
         Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
     }
