@@ -110,14 +110,16 @@ $desktop=[environment]::getfolderpath("desktop")
 $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
 
 
-if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"))){
+if((Test-Path -Path $($PSScriptRoot+"\settings.psd1"))){
     try {
-        $ConfigFile = Import-PowerShellDataFile -Path $documents"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
+        $ConfigFile = Import-PowerShellDataFile -Path $($PSScriptRoot+"\settings.psd1")
     }catch{
         "Probléme avec le fichier de conf."
         exit 0;
     }
 }else{
+    $MyInvocation.MyCommand.Path
+    $PSScriptRoot
     "fichier de conf introuvable."
     exit 0;
 }
