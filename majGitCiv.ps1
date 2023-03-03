@@ -12,7 +12,8 @@ function VerifGit {
     {
         "Installation de git:"
         winget install --id Git.Git -e --source winget
-        refreshPath
+        #refresh l'envirronement pour avoir git
+        $Env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
     }
 }
 
@@ -119,7 +120,7 @@ $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
 
-if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"))){
+if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"))){
     #installation
     Write-Host "Le Modloader n'est pas installé"
     $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
@@ -148,15 +149,20 @@ if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGi
         }
     }
     "installation terminée"
+    Start-Sleep -s 5
     exit 0;
+}
+if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"))){
+    try {
+        $ConfigFile = Import-PowerShellDataFile -Path $documents"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
+    }catch{
+        "Probléme avec le fichier de conf."
+        exit 0;
+    }
+        "Probléme avec le fichier de conf."
+        exit 0;
 }
 
-try {
-    $ConfigFile = Import-PowerShellDataFile -Path $documents"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
-}catch{
-    "Probléme avec le fichier de conf."
-    exit 0;
-}
 
 
 
