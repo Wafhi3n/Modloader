@@ -91,7 +91,7 @@ function UpdateMod {
 }
 function createIcon() {
     $targetPath = "powershell.exe"
-    $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'"shortcut"'
+    $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'" shortcut'
     $Arguments
     $Path=$($desktop+"\"+$shortCutName+".lnk")
     $WshShell = New-Object -comObject WScript.Shell
@@ -117,44 +117,36 @@ function verifInstallAllMod(){
 #Conf
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
-
+$documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
 if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")  -PathType Leaf )){
     Write-Host "Le Modloader n'a pas été installé"
     $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
+    $shortCutName = "Civ6-BBG"
+    $com = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
     #Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
         VerifGit
         #Verification de Modloader
         
         VerifAndInstallWithGit $gitUpdategitCiv $($documents+"\My Games\Sid Meier's Civilization VI")
         Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI")
-        
-
+        #Verification de la presence de l'icone
+        if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )-and $isShortcut -ne "shotcut"){
+            createIcon
+            Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
+        }
+        exit 0;
 }
 
-exit 0;
+
 try {
-    "fsdfdsfd"
-    $ConfigFile = Import-PowerShellDataFile -Path $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
+    $ConfigFile = Import-PowerShellDataFile -Path $documents"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
 }catch{
     "Probléme avec le fichier de conf."
-
-     if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")  -PathType Leaf )){
-        Write-Host "Le Modloader n'a pas été installé"
-        $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
-        #Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
-            VerifGit
-            #Verification de Modloader
-            
-            VerifAndInstallWithGit $gitUpdategitCiv $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")
-            Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")
-            
-        
-        }
     exit 0;
 }
 
 
-exit 0;
+
 $git = $ConfigFile.git 
 $shortCutName=$ConfigFile.shortCutName
 $gitUpdategitCiv=$ConfigFile.gitUpdategitCiv
@@ -174,6 +166,9 @@ $voice.rate = 0
 
 
 function main(){
+
+    "main"
+
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
 
