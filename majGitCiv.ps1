@@ -2,7 +2,7 @@ param(
     [Parameter()]
     [String]$isShortcut
 )
-
+$gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
 $git = @(
          "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git",
          "https://github.com/57fan/Civ6-BBS-2.git",
@@ -12,13 +12,14 @@ $git = @(
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
+$dirDocCivVI=$documents+"\My Games\Sid Meier's Civilization VI"
+
 $env:GIT_REDIRECT_STDERR = '2>&1'
 $shortCutName="Civ6-BBG"
 $com=$MyInvocation.MyCommand.Path
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
-#Process.StartInfo.UseShellExecute = true;
-#Process.StartInfo.Verb = "runas";
+
 function Elevation {
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -File $com";
@@ -50,24 +51,35 @@ function VerifGit {
 }
 function VerifAndInstallWithGit {
     param (
-        $Mod
+        $Repo,
+        $Path
+
     )
-    $DirName=GetName $Mod
-    $TotalPath=$dirMod+"\"+$DirName
+    $DirName=GetName $Repo
+    $TotalPath=$Path+"\"+$DirName
     if (!(Test-Path -Path $TotalPath -PathType Container )) {
         Write-Host $DirName" - non installé dans :"$TotalPath;
         Write-Host "installation avec git clone..."
-        Set-Location $dirMod
-        git clone $Mod
+        Set-Location $Path
+        git clone $Repo
     }          
 }
-function Update {
+
+function VerifAndInstallModWithGit {
+    param (
+        $Mod
+    )    
+    VerifAndInstallWithGit $Mod $dirMod    
+}
+
+function Update {   
     param (
         $Mod,
-        $GameLauched
+        $GameLauched,
+        $Path
     )
     $DirName=GetName $Mod
-    $TotalPath=$dirMod+"\"+$DirName
+    $TotalPath=$Path+"\"+$DirName
     Set-Location $TotalPath
     git fetch --tags
     $latesttag=$(git describe --tags (git rev-list --tags --max-count=1))
@@ -86,6 +98,16 @@ function Update {
         }
     }
 }
+
+function UpdateMod {   
+    param (
+        $Mod,
+        $GameLauched
+    )
+    Update $Mod $GameLauched $dirMod
+}
+
+
 function createIcon() {
     $targetPath = "powershell.exe"
     $Arguments = "-ExecutionPolicy Bypass -File $com shortcut"
@@ -101,12 +123,12 @@ function updateAllMod(){
         $GameLauched
     )
     $git | ForEach-Object {
-        Update $PSItem $GameLauched
+        UpdateMod $PSItem $GameLauched
     }
 }
 function verifInstallAllMod(){
     $git | ForEach-Object {
-        VerifAndInstallWithGit $PSItem 
+        VerifAndInstallModWithGit $PSItem 
     }
 }
 function main(){
@@ -117,19 +139,25 @@ function main(){
         VerifGit
     }
     
-
+#Verification de Modloader
+    if ($git){
+        VerifAndInstallWithGit $gitUpdategitCiv $dirDocCivVI
+        Update  $gitUpdategitCiv 0 $dirDocCivVI
+    }
+    
+#Verification des Mods
     $git | ForEach-Object {
-        VerifAndInstallWithGit $PSItem;
-        Update  $PSItem 0 ;
+        VerifAndInstallModWithGit $PSItem;
+        UpdateMod  $PSItem 0 ;
     }
 
-    
+    exit 0;
     if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )){
         createIcon
         Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
     }
 
-    Write-Host "lancement de CIV6 avec steam..." 
+    Write-Host "lancement de CIV6 avec steam..."
    
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
