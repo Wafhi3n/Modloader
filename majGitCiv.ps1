@@ -118,8 +118,9 @@ function verifInstallAllMod(){
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
-if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")  -PathType Leaf )){
-    Write-Host "Le Modloader n'a pas été installé"
+
+if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"))){
+    Write-Host "Le Modloader n'est pas installé"
     $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
     $shortCutName = "Civ6-BBG"
     $com = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
