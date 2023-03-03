@@ -32,17 +32,6 @@ function VerifAndInstallWithGit {
         git clone $Repo
     }          
 }
-function Elevation {
-    if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -File $com";
-        exit;
-    }
-}
-function refreshPath {
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") +
-                ";" +
-                [System.Environment]::GetEnvironmentVariable("Path","User")
-}
 function GetName {
     param(
         $GitName
@@ -159,8 +148,9 @@ if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGi
         "Probléme avec le fichier de conf."
         exit 0;
     }
-        "Probléme avec le fichier de conf."
-        exit 0;
+}else{
+    "fichier de conf inexistant."
+    exit 0;
 }
 
 
