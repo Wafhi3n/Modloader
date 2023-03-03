@@ -194,11 +194,7 @@ function main(){
         UpdateMod  $PSItem 0 ;
     }
 
-#Verification de la presence de l'icone
-    if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )-and $isShortcut -ne "shotcut"){
-        createIcon
-        Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
-    }
+
 
     Write-Host "lancement de CIV6 avec steam..."
    
