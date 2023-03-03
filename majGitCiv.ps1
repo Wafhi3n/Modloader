@@ -13,7 +13,6 @@ $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $dirMod=$documents+"\My Games\Sid Meier's Civilization VI\Mods"
 $dirDocCivVI=$documents+"\My Games\Sid Meier's Civilization VI"
-
 $env:GIT_REDIRECT_STDERR = '2>&1'
 $shortCutName="Civ6-BBG"
 $com="D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
@@ -98,7 +97,6 @@ function Update {
         }
     }
 }
-
 function UpdateMod {   
     param (
         $Mod,
@@ -106,8 +104,6 @@ function UpdateMod {
     )
     Update $Mod $GameLauched $dirMod
 }
-
-
 function createIcon() {
     $targetPath = "powershell.exe"
     $Arguments = "-ExecutionPolicy Bypass -File $com shortcut"
@@ -144,6 +140,7 @@ function main(){
         VerifAndInstallWithGit $gitUpdategitCiv $dirDocCivVI
         Update  $gitUpdategitCiv 0 $dirDocCivVI
     }
+
 
 #Verification des Mods
     $git | ForEach-Object {
