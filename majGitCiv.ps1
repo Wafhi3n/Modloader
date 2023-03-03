@@ -6,8 +6,8 @@ param(
 $git = @(
          "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git",
          "https://github.com/57fan/Civ6-BBS-2.git",
-         "https://github.com/iElden/MultiplayerHelper.git",
-         "https://github.com/iElden/BetterSpectatorMod.git"
+         "https://github.com/CivilizationVIBetterBalancedGame/MultiplayerHelper.git",
+         "https://github.com/CivilizationVIBetterBalancedGame/BetterSpectatorMod.git"
        )
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
