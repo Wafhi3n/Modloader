@@ -81,7 +81,7 @@ function UpdateMod {
 }
 function createIcon() {
     $targetPath = "powershell.exe"
-    $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'" shortcut'
+    $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'"'
     $Path=$($desktop+"\"+$shortCutName+".lnk")
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($Path)
@@ -109,38 +109,7 @@ $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
 
-if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"))){
-    #installation
-    Write-Host "Le Modloader n'est pas installé"
-    $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
-    $shortCutName = "Civilization VI - CivFR"
-    $com = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
-    #Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
-    VerifGit
-    #Verification de Modloader
-    
-    VerifAndInstallWithGit $gitUpdategitCiv $($documents+"\My Games\Sid Meier's Civilization VI")
-    Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI")
-    #Verification de la presence de l'icone
-    if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )-and $isShortcut -ne "shotcut"){
-        createIcon
-        Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
-    }
 
-    #verification du dossier de mods
-    if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\Mods"))){
-        ls $($documents+"\My Games\Sid Meier's Civilization VI\Mods")
-        $rmModFolder = Read-Host -Prompt "Dossier de Mods non vide, souhaitez-vous supprimer tout les mods à l'interieurs ?"
-        Write-Host $rmModFolder
-        if ($rmModFolder = 'y'){
-            "ok"
-            Get-ChildItem -Path $($documents+"\My Games\Sid Meier's Civilization VI\Mods") -Recurse | Remove-Item -force -recurse
-        }
-    }
-    "installation terminée"
-    Start-Sleep -s 5
-    exit 0;
-}
 if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"))){
     try {
         $ConfigFile = Import-PowerShellDataFile -Path $documents"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
@@ -149,7 +118,7 @@ if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGi
         exit 0;
     }
 }else{
-    "fichier de conf inexistant."
+    "fichier de conf introuvable."
     exit 0;
 }
 
@@ -158,7 +127,6 @@ if((Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGi
 
 $git = $ConfigFile.git 
 $shortCutName=$ConfigFile.shortCutName
-$gitUpdategitCiv=$ConfigFile.gitUpdategitCiv
 $dirDocCivVI=$documents+$ConfigFile.mygameCivVI
 $dirMod=$dirDocCivVI+"\Mods"
 
@@ -182,11 +150,7 @@ function main(){
 #Verification du dossier de mod
 
 #Verification de Git   
-    if ($isShortcut -ne "shotcut"){
-        VerifGit
-    }
-
-
+    VerifGit
 
 #Verification des Mods
     $git | ForEach-Object {
@@ -194,10 +158,7 @@ function main(){
         UpdateMod  $PSItem 0 ;
     }
 
-
-
     Write-Host "lancement de CIV6 avec steam..."
-   
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
     While ($true){

@@ -18,7 +18,14 @@ Comme les scripts Powershell ne peuvent pas être exécuté par clic, il va cré
 N'oubliez pas de débloquer le script après l'avoir lu, car sinon il sera bloqué au lancement !
 
 
+Crée le raccourci 
+-----------------
+
+C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -File "[.....Lien vers le fichier ps1....]"
+
 Pour l'ajouter sur Steam :
 ---------------
 - Ajouter un raccourci non-steam
 - Parcourir : chercher le raccourci sur le bureau.
+
+
