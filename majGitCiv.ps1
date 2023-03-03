@@ -156,15 +156,17 @@ function main(){
 #Verification de Git   
     VerifGit
 
+
+if ($isInstaller = "byInstaller"){
+    Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
+}
+
 #Verification des Mods
     $git | ForEach-Object {
         VerifAndInstallModWithGit $PSItem;
         UpdateMod  $PSItem 0 ;
     }
-
-    if ($isInstaller = "byInstaller"){
-        Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
-    }
+    
     Write-Host "lancement de CIV6 avec steam..."
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
