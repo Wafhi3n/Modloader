@@ -16,7 +16,7 @@ $dirDocCivVI=$documents+"\My Games\Sid Meier's Civilization VI"
 
 $env:GIT_REDIRECT_STDERR = '2>&1'
 $shortCutName="Civ6-BBG"
-$com=$MyInvocation.MyCommand.Path
+$com="D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\majGitCiv.ps1"
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
 
@@ -144,14 +144,14 @@ function main(){
         VerifAndInstallWithGit $gitUpdategitCiv $dirDocCivVI
         Update  $gitUpdategitCiv 0 $dirDocCivVI
     }
-    
+
 #Verification des Mods
     $git | ForEach-Object {
         VerifAndInstallModWithGit $PSItem;
         UpdateMod  $PSItem 0 ;
     }
 
-    exit 0;
+
     if(!(Test-Path -Path $($desktop+"\"+$shortCutName+".lnk")  -PathType Leaf )){
         createIcon
         Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
