@@ -92,7 +92,6 @@ function UpdateMod {
 function createIcon() {
     $targetPath = "powershell.exe"
     $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'" shortcut'
-    $Arguments
     $Path=$($desktop+"\"+$shortCutName+".lnk")
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($Path)
