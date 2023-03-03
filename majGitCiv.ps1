@@ -2,30 +2,35 @@ param(
     [Parameter()]
     [String]$isShortcut
 )
-#Conf
-try {
-    $ConfigFile = Import-PowerShellDataFile -Path "D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
-}catch{
-    "Probléme avec le fichier de conf."
-    exit 0;
+#Fonction#
+function VerifGit {
+    try
+    {
+        git | Out-Null
+    }
+    catch [System.Management.Automation.CommandNotFoundException]
+    {
+        "Installation de git:"
+        winget install --id Git.Git -e --source winget
+        refreshPath
+    }
 }
-    
-$documents=[environment]::getfolderpath("mydocuments")
-$desktop=[environment]::getfolderpath("desktop")
-$git = $ConfigFile.git 
-$shortCutName=$ConfigFile.shortCutName
-$gitUpdategitCiv=$ConfigFile.gitUpdategitCiv
-$dirDocCivVI=$documents+$ConfigFile.mygameCivVI
-$dirMod=$dirDocCivVI+"\Mods"
 
-$env:GIT_REDIRECT_STDERR = '2>&1'
-$com=$MyInvocation.MyCommand.Path
-$voice = New-Object -ComObject Sapi.spvoice
-$voice.rate = 0
+function VerifAndInstallWithGit {
+    param (
+        $Repo,
+        $Path
 
-
-
-
+    )
+    $DirName=GetName $Repo
+    $TotalPath=$Path+"\"+$DirName
+    if (!(Test-Path -Path $TotalPath -PathType Container )) {
+        Write-Host $DirName" - non installé dans :"$TotalPath;
+        Write-Host "installation avec git clone..."
+        Set-Location $Path
+        git clone $Repo
+    }          
+}
 function Elevation {
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Start-Process PowerShell -Verb RunAs "-NoProfile -ExecutionPolicy Bypass -File $com";
@@ -42,33 +47,6 @@ function GetName {
         $GitName
     )
      $GitName.Split('/')[-1].Split('.')[0]
-}
-function VerifGit {
-    try
-    {
-        git | Out-Null
-    }
-    catch [System.Management.Automation.CommandNotFoundException]
-    {
-        "Installation de git:"
-        winget install --id Git.Git -e --source winget
-        refreshPath
-    }
-}
-function VerifAndInstallWithGit {
-    param (
-        $Repo,
-        $Path
-
-    )
-    $DirName=GetName $Repo
-    $TotalPath=$Path+"\"+$DirName
-    if (!(Test-Path -Path $TotalPath -PathType Container )) {
-        Write-Host $DirName" - non installé dans :"$TotalPath;
-        Write-Host "installation avec git clone..."
-        Set-Location $Path
-        git clone $Repo
-    }          
 }
 
 function VerifAndInstallModWithGit {
@@ -135,6 +113,66 @@ function verifInstallAllMod(){
         VerifAndInstallModWithGit $PSItem 
     }
 }
+
+#Conf
+$documents=[environment]::getfolderpath("mydocuments")
+$desktop=[environment]::getfolderpath("desktop")
+
+if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")  -PathType Leaf )){
+    Write-Host "Le Modloader n'a pas été installé"
+    $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
+    #Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
+        VerifGit
+        #Verification de Modloader
+        
+        VerifAndInstallWithGit $gitUpdategitCiv $($documents+"\My Games\Sid Meier's Civilization VI")
+        Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI")
+        
+
+}
+
+exit 0;
+try {
+    "fsdfdsfd"
+    $ConfigFile = Import-PowerShellDataFile -Path $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\settings.psd1"
+}catch{
+    "Probléme avec le fichier de conf."
+
+     if(!(Test-Path -Path $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")  -PathType Leaf )){
+        Write-Host "Le Modloader n'a pas été installé"
+        $gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
+        #Write-Host "Icone crée sur le Bureau : Civ6-BBG!"
+            VerifGit
+            #Verification de Modloader
+            
+            VerifAndInstallWithGit $gitUpdategitCiv $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")
+            Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv")
+            
+        
+        }
+    exit 0;
+}
+
+
+exit 0;
+$git = $ConfigFile.git 
+$shortCutName=$ConfigFile.shortCutName
+$gitUpdategitCiv=$ConfigFile.gitUpdategitCiv
+$dirDocCivVI=$documents+$ConfigFile.mygameCivVI
+$dirMod=$dirDocCivVI+"\Mods"
+
+$env:GIT_REDIRECT_STDERR = '2>&1'
+$com=$MyInvocation.MyCommand.Path
+$voice = New-Object -ComObject Sapi.spvoice
+$voice.rate = 0
+
+
+
+
+
+
+
+
 function main(){
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
@@ -146,11 +184,7 @@ function main(){
         VerifGit
     }
 
-#Verification de Modloader
-    if ($git){
-        VerifAndInstallWithGit $gitUpdategitCiv $dirDocCivVI
-        Update  $gitUpdategitCiv 0 $dirDocCivVI
-    }
+
 
 #Verification des Mods
     $git | ForEach-Object {
