@@ -8,10 +8,10 @@ $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 
 ####localization
-if((Test-Path -Path $($PSScriptRoot+"\"+$PsUICulture+"\loc.psd1"))){
+if((Test-Path -Path $($PSScriptRoot+"\"+$PsUICulture+"\locs.psd1"))){
     Import-LocalizedData -BindingVariable "Messages" -FileName "loc.psd1"
 }else{
-    Import-LocalizedData -BindingVariable "Messages" -UICulture "fr-FR" -FileName "loc.psd1"
+    Import-LocalizedData -BindingVariable "Messages" -UICulture "en-EN" -FileName "loc.psd1"
     #TODO verif loc manquant -> mute -<
 }
 #######Conf
