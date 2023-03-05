@@ -12,8 +12,7 @@ if((Test-Path -Path $($PSScriptRoot+"\"+$PsUICulture+"\loc.psd1"))){
     Import-LocalizedData -BindingVariable "Messages" -FileName "loc.psd1"
 }else{
     Import-LocalizedData -BindingVariable "Messages" -UICulture "fr-FR" -FileName "loc.psd1"
-
-    #verif loc manquant# if then mute -<
+    #TODO verif loc manquant -> mute -<
 }
 #######Conf
 if((Test-Path -Path $($PSScriptRoot+"\settings.psd1"))){
@@ -144,25 +143,17 @@ function main(){
 
     $date=Get-Date
     $nextCheck=$date.AddMinutes(30);
-
-#Verification du dossier de mod
-
 #Verification de Git   
     VerifGit
-
-
-if ($isInstaller = "byInstaller"){
-    #Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
+if ($isInstaller -eq "byInstaller"){
+    Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
 }
-
 #Verification des Mods
     $git | ForEach-Object {
         VerifAndInstallModWithGit $PSItem;
         UpdateMod  $PSItem 0 ;
     }
-    
     Write-Host $($Messages.lauchGame+"...")
-    exit 0
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
     While ($true){
