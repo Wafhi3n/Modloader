@@ -1,7 +1,7 @@
 #
-# Manifeste de module pour le module « PSGet_settings »
+# Manifeste de module pour le module « PSGet_Modloader »
 #
-# Généré par : wafhi
+# Généré par : wafhien
 #
 # Généré le : 05/03/2023
 #
@@ -9,7 +9,7 @@
 @{
 
 # Module de script ou fichier de module binaire associé à ce manifeste
- RootModule = '.\Modloader.psm1'
+RootModule = '.\Modloader.psm1'
 
 # Numéro de version de ce module.
 ModuleVersion = '1.0'
@@ -27,7 +27,7 @@ Author = 'wafhien'
 CompanyName = 'Inconnu'
 
 # Déclaration de copyright pour ce module
-Copyright = '(c) 2023 wafhi. Tous droits rï¿½servï¿½s.'
+Copyright = '(c) 2023 wafhien. Tous droits rï¿½servï¿½s.'
 
 # Description de la fonctionnalité fournie par ce module
 # Description = ''
@@ -69,7 +69,7 @@ Copyright = '(c) 2023 wafhi. Tous droits rï¿½servï¿½s.'
 # NestedModules = @()
 
 # Fonctions à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune fonction à exporter.
-FunctionsToExport = @('test','getConfParam')
+FunctionsToExport = @('test','main')
 
 # Applets de commande à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune applet de commande à exporter.
 CmdletsToExport = @()
@@ -92,28 +92,27 @@ AliasesToExport = @()
 # Données privées à transmettre au module spécifié dans RootModule/ModuleToProcess. Cela peut également inclure une table de hachage PSData avec des métadonnées de modules supplémentaires utilisées par PowerShell.
 PrivateData = @{
 
-    #shortCutName of this module
-    shortCutName = 'Civ6-BBG'
-
-    #autostart of this module
-    autostart = 'false'
-
-    #mygameCivVI of this module
-    mygameCivVI = "\My Games\Sid Meier's Civilization VI"
-
     #git of this module
-    git = @(
-        "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git"
-        "https://github.com/57fan/Civ6-BBS-2.git"
-        "https://github.com/CivilizationVIBetterBalancedGame/MultiplayerHelper.git"
-        "https://github.com/CivilizationVIBetterBalancedGame/BetterSpectatorMod.git"
-      )
+    git = '[
+    "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git",
+    "https://github.com/57fan/Civ6-BBS-2.git",
+    "https://github.com/CivilizationVIBetterBalancedGame/MultiplayerHelper.git",
+    "https://github.com/CivilizationVIBetterBalancedGame/BetterSpectatorMod.git"
+]'
 
     #gitUpdategitCiv of this module
     gitUpdategitCiv = 'https://github.com/Wafhi3n/UpdateGitModCiv'
 
+    #mygameCivVI of this module
+    mygameCivVI = '%5cMy+Games%5cSid+Meier%27s+Civilization+VI'
+
+    #autostart of this module
+    autostart = 'false'
+
+    autoUpdateModloader = 'false'
+
     PSData = @{
-        git ="fsd"
+
         # Tags applied to this module. These help with module discovery in online galleries.
         # Tags = @()
 

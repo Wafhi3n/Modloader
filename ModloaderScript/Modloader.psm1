@@ -1,18 +1,50 @@
+
+
+$documents=[environment]::getfolderpath("mydocuments")
+$desktop=[environment]::getfolderpath("desktop")
+####localization
+if((Test-Path -Path $($PSScriptRoot+"\..\"+"\"+$PsUICulture+"\loc.psd1"))){
+    Import-LocalizedData -BindingVariable "Messages" -BaseDirectory $($PSScriptRoot+"\..\") -FileName "loc.psd1"
+}else{
+    Import-LocalizedData -BindingVariable "Messages" -UICulture "en-EN" -BaseDirectory $($PSScriptRoot+"\..\") -FileName "loc.psd1"
+    #TODO verif loc manquant -> mute -<
+}
+################Fonction################
 function test(){
     Write-Host "test function module";
     #Write-Host( $MyInvocation.MyCommand.Module.PrivateData)
 }
-
-
 function getConfParam(){
     param(
         $key
     )
     return $MyInvocation.MyCommand.Module.PrivateData
 }
+function UpdateConf(){
+    $Params = @{
+     Path = $($PSScriptRoot+"\ModloaderScript\Modloader.psd1")
+     PrivateData = $ht2
+  }
+  Update-ModuleManifest  @Params
+}
 
 
-
+####Getter###
+function GetGitRepo(){
+    return (ConvertFrom-Json $MyInvocation.MyCommand.Module.PrivateData.git)
+}
+function GetCiv6Games(){
+    return [System.Web.HttpUtility]::UrlDecode($MyInvocation.MyCommand.Module.PrivateData.mygameCivVI)
+}
+function GetGitUpdategitCiv(){
+    return $MyInvocation.MyCommand.Module.PrivateData.gitUpdategitCiv
+}
+function GetAutostart(){
+    return $MyInvocation.MyCommand.Module.PrivateData.autostart
+}
+function GetautoUpdateModloader(){
+    return $MyInvocation.MyCommand.Module.PrivateData.autoUpdateModloader
+}
 
 
 function VerifGit {
@@ -40,7 +72,7 @@ function VerifAndInstallWithGit {
         Write-Host $Messages.gitClone
         Set-Location $Path
         git clone $Repo
-    }          
+    }     
 }
 function GetName {
     param(
@@ -52,7 +84,7 @@ function VerifAndInstallModWithGit {
     param (
         $Mod
     )    
-    VerifAndInstallWithGit $Mod $dirMod    
+    VerifAndInstallWithGit $Mod $([environment]::getfolderpath("mydocuments")+$(GetCiv6Games)+"\Mods")  
 }
 function Update {   
     param (
@@ -87,8 +119,9 @@ function UpdateMod {
         $Mod,
         $GameLauched
     )
-    Update $Mod $GameLauched $dirMod 0
+    Update $Mod $GameLauched $([environment]::getfolderpath("mydocuments")+$(GetCiv6Games)+"\Mods") 0
 }
+
 function createIcon() {
     $targetPath = "powershell.exe"
     $Arguments = '-ExecutionPolicy Bypass -File "'+$com+'"'
@@ -100,6 +133,7 @@ function createIcon() {
     $Shortcut.IconLocation = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\launcher.ico"
     $Shortcut.Save()
 }
+
 function updateAllMod(){
     param(
         $GameLauched
@@ -117,7 +151,6 @@ function checkForUpdate {
     param (
         $OptionalParameters
     )
-    
 }
 function startCiv {
     param (
@@ -144,3 +177,39 @@ function startCiv {
     }
     
 }
+
+$git = GetGitRepo
+$dirDocCivVI=$documents+$(GetCiv6Games)
+$gitUpdategitCiv = $documents+$(GetGitUpdategitCiv)
+$dirMod=$dirDocCivVI+"\Mods"
+
+$env:GIT_REDIRECT_STDERR = '2>&1'
+$com=$MyInvocation.MyCommand.Path
+$voice = New-Object -ComObject Sapi.spvoice
+$voice.rate = 0
+
+function main(){
+
+    $date=Get-Date
+    $nextCheck=$date.AddMinutes(30);
+
+#Verification de Git   
+VerifGit
+
+if (($isInstaller -eq "byInstaller") -and ([System.Convert]::ToBoolean($(GetautoUpdateModloader)))){
+    Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
+}
+
+    #Verification des Mods
+    $git | ForEach-Object {
+        VerifAndInstallModWithGit $PSItem;
+        UpdateMod  $PSItem 0 ;
+    }
+
+    if([System.Convert]::ToBoolean($(GetAutostart))){
+        startCiv
+        Write-Host start
+    }
+}
+
+main
