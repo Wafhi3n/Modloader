@@ -2,6 +2,32 @@ param(
     [Parameter()]
     [String]$isInstaller
 )
+
+
+$documents=[environment]::getfolderpath("mydocuments")
+$desktop=[environment]::getfolderpath("desktop")
+
+####localization
+if((Test-Path -Path $($PSScriptRoot+"\"+$PsUICulture+"\loc.psd1"))){
+    Import-LocalizedData -BindingVariable "Messages" -FileName "loc.psd1"
+}else{
+    Import-LocalizedData -BindingVariable "Messages" -UICulture "fr-FR" -FileName "loc.psd1"
+
+    #verif loc manquant# if then mute -<
+}
+#######Conf
+if((Test-Path -Path $($PSScriptRoot+"\settings.psd1"))){
+    try {
+        $ConfigFile = Import-PowerShellDataFile -Path $($PSScriptRoot+"\settings.psd1")
+    }catch{
+        Write-Host $Messages.issueConfigFile
+        exit 0;
+    }
+}else{
+    $MyInvocation.MyCommand.Path
+    Write-Host $Messages.missingConfigFile
+    exit 0;
+}
 #Fonction#
 function VerifGit {
     try
@@ -10,13 +36,12 @@ function VerifGit {
     }
     catch [System.Management.Automation.CommandNotFoundException]
     {
-        "Installation de git:"
+        Write-Host $($Messages.gitInstallation+":")
         winget install --id Git.Git -e --source winget
         #refresh l'envirronement pour avoir git
         $Env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
     }
 }
-
 function VerifAndInstallWithGit {
     param (
         $Repo,
@@ -26,8 +51,8 @@ function VerifAndInstallWithGit {
     $DirName=GetName $Repo
     $TotalPath=$Path+"\"+$DirName
     if (!(Test-Path -Path $TotalPath -PathType Container )) {
-        Write-Host $DirName" - non installé dans :"$TotalPath;
-        Write-Host "installation avec git clone..."
+        Write-Host $($DirName+" - "+$Messages.notInstalledIn+" : "+$TotalPath);
+        Write-Host $Messages.gitClone
         Set-Location $Path
         git clone $Repo
     }          
@@ -38,14 +63,12 @@ function GetName {
     )
      $GitName.Split('/')[-1].Split('.')[0]
 }
-
 function VerifAndInstallModWithGit {
     param (
         $Mod
     )    
     VerifAndInstallWithGit $Mod $dirMod    
 }
-
 function Update {   
     param (
         $Mod,
@@ -61,15 +84,16 @@ function Update {
     $tagActuel=git describe --tags
     if($latesttag -ne $tagActuel){
         if(!$GameLauched){
-            Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la" $tagActuel
+            Write-Host $($Messages.updateRequire+" "+$DirName+" "+$latesttag+" "+$Messages.updateFrom+" "+$tagActuel)
             git -c advice.detachedHead=false checkout $latesttag
         }else{
-            $voice.speak($("Maj necessaire de "+$DirName+" "+$latesttag+" depuis la "+$tagActuel+", veuillez redemarrer Civilisation son script."))
-            Write-Host "Maj necessaire de "$DirName " " $latesttag " depuis la " $tagActuel ", veuillez redemarrer le jeu et ce script."
+            $voice.speak($($Messages.updateRequire+$DirName+" "+$latesttag+" "+$Messages.updateFrom+" "+$tagActuel+", "+$Messages.rebootCiv))
+            Write-Host $($Messages.updateRequire+" "+$DirName+" "+$latesttag+" "+$Messages.updateFrom+" "+$tagActuel+", "+$Messages.rebootCiv)
+            
         }
     }else{
         if(!$GameLauched){
-            Write-Host $DirName" est à jour."
+            Write-Host $($DirName +" "+ $Messages.upToDate)
         }
     }
 }
@@ -105,29 +129,6 @@ function verifInstallAllMod(){
     }
 }
 
-#Conf
-$documents=[environment]::getfolderpath("mydocuments")
-$desktop=[environment]::getfolderpath("desktop")
-$documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv"
-
-
-if((Test-Path -Path $($PSScriptRoot+"\settings.psd1"))){
-    try {
-        $ConfigFile = Import-PowerShellDataFile -Path $($PSScriptRoot+"\settings.psd1")
-    }catch{
-        "Probléme avec le fichier de conf."
-        exit 0;
-    }
-}else{
-    $MyInvocation.MyCommand.Path
-    $PSScriptRoot
-    "fichier de conf introuvable."
-    exit 0;
-}
-
-
-
-
 $git = $ConfigFile.git 
 $shortCutName=$ConfigFile.shortCutName
 $dirDocCivVI=$documents+$ConfigFile.mygameCivVI
@@ -138,13 +139,6 @@ $env:GIT_REDIRECT_STDERR = '2>&1'
 $com=$MyInvocation.MyCommand.Path
 $voice = New-Object -ComObject Sapi.spvoice
 $voice.rate = 0
-
-
-
-
-
-
-
 
 function main(){
 
@@ -158,7 +152,7 @@ function main(){
 
 
 if ($isInstaller = "byInstaller"){
-    Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
+    #Update  $gitUpdategitCiv 0 $($documents+"\My Games\Sid Meier's Civilization VI") 1
 }
 
 #Verification des Mods
@@ -167,7 +161,8 @@ if ($isInstaller = "byInstaller"){
         UpdateMod  $PSItem 0 ;
     }
     
-    Write-Host "lancement de CIV6 avec steam..."
+    Write-Host $($Messages.lauchGame+"...")
+    exit 0
     Start-Process "steam://rungameid/289070"
     Start-Sleep -s 30
     While ($true){
@@ -176,12 +171,12 @@ if ($isInstaller = "byInstaller"){
         $date=Get-Date   
         if ( $Civ6Process -Or $LaunchPadProcess) {
             if ( $($date - $nextCheck) -gt 0){
-                Write-Host "Recherche de mise à jour"
+                Write-Host $($Messages.lookUpdate)
                 updateAllMod 1 
                 $nextCheck=$date.AddMinutes(30);
             }
         }else {
-            Write-Host "jeu eteint, au revoir" 
+            Write-Host $($Messages.goodBy) 
             exit 0;
         }      
         Start-Sleep -s 5
