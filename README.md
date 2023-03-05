@@ -8,6 +8,11 @@ Prérequis
 
 Vous pouvez aussi directement le lancer en faisant clic droit lancer avec power shell et autoriser l'execution du script aprés avoir débloqué le fichier dans ses propriétés.
 
+Installation 
+----------------
+
+Un fichier Installer.ps1 est fourni dans la section release.
+
 C'est quoi ?
 ---------------
 Ce script installe les mods BBG/BBS/MPH/BSM dans vos Documents au lieu du steam workshop, vous pouvez donc les unsubs.
