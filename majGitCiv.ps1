@@ -9,7 +9,7 @@ if((Test-Path -Path $($PSScriptRoot+"\ModloaderScript\Modloader.psd1")) -and (Te
         #$ConfigFile = Import-PowerShellDataFile -Path $($PSScriptRoot+"\ModloaderScript\Modloader.psd1")
         Import-Module $($PSScriptRoot+"\ModloaderScript\Modloader.psd1")
     }catch{
-        Write-Host "Issue With Module File"
+        Write-Host "Issue With Module Files"
         exit 0;
     }
 }else{

@@ -69,7 +69,7 @@ Copyright = '(c) 2023 wafhien. Tous droits rï¿½servï¿½s.'
 # NestedModules = @()
 
 # Fonctions à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune fonction à exporter.
-FunctionsToExport = @('test','main')
+FunctionsToExport = @('listeMod','deleteMod','installMod')
 
 # Applets de commande à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune applet de commande à exporter.
 CmdletsToExport = @()
@@ -91,25 +91,6 @@ AliasesToExport = @()
 
 # Données privées à transmettre au module spécifié dans RootModule/ModuleToProcess. Cela peut également inclure une table de hachage PSData avec des métadonnées de modules supplémentaires utilisées par PowerShell.
 PrivateData = @{
-
-    #git of this module
-    git = '[
-    "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git",
-    "https://github.com/57fan/Civ6-BBS-2.git",
-    "https://github.com/CivilizationVIBetterBalancedGame/MultiplayerHelper.git",
-    "https://github.com/CivilizationVIBetterBalancedGame/BetterSpectatorMod.git"
-]'
-
-    #gitUpdategitCiv of this module
-    gitUpdategitCiv = 'https://github.com/Wafhi3n/UpdateGitModCiv'
-
-    #mygameCivVI of this module
-    mygameCivVI = '%5cMy+Games%5cSid+Meier%27s+Civilization+VI'
-
-    #autostart of this module
-    autostart = 'false'
-
-    autoUpdateModloader = 'false'
 
     PSData = @{
 
@@ -140,6 +121,7 @@ PrivateData = @{
 
 # Le préfixe par défaut des commandes a été exporté à partir de ce module. Remplacez le préfixe par défaut à l’aide d’Import-Module -Prefix.
 # DefaultCommandPrefix = ''
+
 
 }
 
