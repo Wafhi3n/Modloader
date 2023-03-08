@@ -1,5 +1,5 @@
 @{   
-    gitUpdategitCiv = "https://github.com/Wafhi3n/UpdateGitModCiv"
+    gitUpdategitCiv = "https://github.com/Wafhi3n/Modloader"
     git = @(
          "https://github.com/CivilizationVIBetterBalancedGame/BetterBalancedGame.git"
          "https://github.com/57fan/Civ6-BBS-2.git"
