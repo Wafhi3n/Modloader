@@ -111,7 +111,7 @@ function createIcon() {
     $Shortcut = $WshShell.CreateShortcut($Path)
     $Shortcut.TargetPath = $targetPath
     $Shortcut.Arguments  = $Arguments
-    $Shortcut.IconLocation = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\launcher.ico"
+    $Shortcut.IconLocation = $documents+"\My Games\Sid Meier's Civilization VI\Modloader\launcher.ico"
     $Shortcut.Save()
 }
 function updateAllMod(){
