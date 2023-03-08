@@ -1,4 +1,11 @@
-Add-Type -AssemblyName System.Web
+using namespace System.Collections.Generic          
+using namespace System.Web
+using  namespace ModloaderClass  ;
+
+$a = New-Object .Mod
+
+
+#$a = [ModloaderClass.Model.Mod]@{} ;
 $documents=[environment]::getfolderpath("mydocuments")
 $desktop=[environment]::getfolderpath("desktop")
 ####localization
@@ -103,9 +110,27 @@ function VerifAndInstallWithGitFromName{
             break;
         }
     }
-
-
 }
+function UpdateFromName{
+    param(
+        $Repo,
+        $FromPromp
+         
+    )
+    $git | ForEach-Object {
+
+        if ($(GetName $PSItem) -eq $Repo){
+            "installation"
+            UpdateMod_Module $PSItem $GameLauched $FromPromp
+            #Write-Host $("indtall"+$Repo)  
+            break;
+        }
+    }
+}
+
+
+
+
 function VerifAndInstallWithGitFromName{
     param(
         $Repo
@@ -114,8 +139,8 @@ function VerifAndInstallWithGitFromName{
 
         if ($(GetName $PSItem) -eq $Repo){
             "installation"
-            #VerifAndInstallModWithGit $PSItem 1
-            checkModFromName PSItem
+            VerifAndInstallModWithGit $PSItem 1
+            #checkModFromName PSItem
             #Write-Host $("indtall"+$Repo)  
             break;
         }
@@ -185,14 +210,30 @@ function VerifAndInstallModWithGit {
     )    
     VerifAndInstallWithGit $Mod $([environment]::getfolderpath("mydocuments")+$(GetCiv6Games)+"\Mods") $force 
 }
+
+function GitReset(){
+    param(
+        $TotalPath
+    )
+    if(!($TotalPath -eq $dirMod)){
+    git clean -fxd
+    git reset --hard
+    }
+}
+
+function GitCheckoutFromTag(){
+    param(
+    )
+    git -c advice.detachedHead=false checkout $latesttag
+}
 function Update {   
     param (
         $Mod,
         $GameLauched,
         $Path,
-        $modloader
+        $modloader,
+        $FromPromp
     )
-
     $DirName= $(GetName $Mod)  
     $TotalPath=$Path+"\"+$DirName
     if (!(Test-Path -Path $TotalPath -PathType Container )) {
@@ -205,11 +246,12 @@ function Update {
     if($latesttag -ne $tagActuel){
         if(!$GameLauched){
             Write-Host $($(getLocMessage("updateRequire"))+" "+$DirName+" "+$latesttag+" "+$(getLocMessage("updateFrom"))+" "+$tagActuel)
-            if(([System.Convert]::ToBoolean($(GetautoUpdateModloader)))){
+            if(([System.Convert]::ToBoolean($(GetautoUpdateModloader))) -or ($FromPromp)){
 
                 $ask = Read-Host -Prompt $(getLocMessage("askingUpdate"))
                 if ($ask -eq $(getLocMessage("yes"))){
-                    git -c advice.detachedHead=false checkout $latesttag
+                    GitReset $TotalPath
+                    GitCheckoutFromTag $latesttag
                 }               
             }
             
@@ -225,13 +267,13 @@ function Update {
         }
     }
 }
-function UpdateMod {   
+function UpdateMod_Module {   
     param (
         $Mod,
-        $GameLauched
+        $GameLauched,
+        $FromPromp
     )
-    
-    Update $Mod $GameLauched $([environment]::getfolderpath("mydocuments")+$(GetCiv6Games)+"\Mods") 0
+    Update $Mod $GameLauched $([environment]::getfolderpath("mydocuments")+$(GetCiv6Games)+"\Mods") 0 $FromPromp
 }
 
 function createIcon() {
@@ -242,7 +284,7 @@ function createIcon() {
     $Shortcut = $WshShell.CreateShortcut($Path)
     $Shortcut.TargetPath = $targetPath
     $Shortcut.Arguments  = $Arguments
-    $Shortcut.IconLocation = $documents+"\My Games\Sid Meier's Civilization VI\UpdateGitModCiv\launcher.ico"
+    $Shortcut.IconLocation = $documents+"\My Games\Sid Meier's Civilization VI\Modloader\launcher.ico"
     $Shortcut.Save()
 }
 
@@ -251,7 +293,7 @@ function updateAllMod(){
         $GameLauched
     )
     $git | ForEach-Object {
-        UpdateMod $PSItem $GameLauched
+        UpdateMod_Module $PSItem $GameLauched 0
     }
 }
 function verifInstallAllMod(){
@@ -312,9 +354,6 @@ function listeMod(){
 }
 function choiceMod(){
     param()
-    Write-Host "-----------"
-    Write-Host $git 
-    Write-Host "-----------"
     $mod=[ordered]@{}
     Write-Host  $(getLocMessage("ModListGit")+" "+$dirMod)
     Write-Host ("Choix"+"     "+"Mod")
@@ -378,6 +417,29 @@ function installMod(){
         }
     }
 }
+
+function UpdateMod(){
+    param(
+        $mod,
+        $tag
+    )
+    $cpt=0;
+    #if()$mod = choiceMod
+    $askRmModFolder = Read-Host -Prompt  $(getLocMessage("askToUpdateModNumber"))
+    if ($mod.Contains([string]$askRmModFolder)){
+        $p= $($documents+"\My Games\Sid Meier's Civilization VI\Mods\"+$mod[[string]$askRmModFolder])
+        $rmModFolder = Read-Host -Prompt  $(getLocMessage("askToUpdateMod"))
+        if ($rmModFolder -eq  $(getLocMessage("yes"))){
+            if((Test-Path -Path $p)){
+                UpdateFromName $mod[[string]$askRmModFolder] 1 $tag
+                "installé"
+            }
+        }
+    }
+}
+
+
+
 function ChangeTagMod(){
     param(
 
@@ -445,7 +507,7 @@ $date=Get-Date
 $nextCheck=$date.AddMinutes(30);
 
 function main(){
-
+Set-Location $PSScriptRoot
 
 #Verification de Git   
 VerifGit
@@ -458,14 +520,12 @@ if (($isInstaller -eq "byInstaller") -and ([System.Convert]::ToBoolean($(Getauto
 #Write-Host $git
     #Verification des Mods
     $git | ForEach-Object {
-        
         VerifAndInstallModWithGit $PSItem;
-        UpdateMod  $PSItem 0 ;
+        UpdateMod_Module  $PSItem 0 0;
     }
-    exit 0
     if([System.Convert]::ToBoolean($(GetAutostart))){
         startCiv
         Write-Host start
     }
 }
-main
+#main

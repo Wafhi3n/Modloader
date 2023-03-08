@@ -1,0 +1,12 @@
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.csproj.AssemblyReference.cache
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.GeneratedMSBuildEditorConfig.editorconfig
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.AssemblyInfoInputs.cache
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.AssemblyInfo.cs
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.csproj.CoreCompileInputs.cache
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\bin\Debug\net6.0\ModloaderClass.deps.json
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\bin\Debug\net6.0\ModloaderClass.dll
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\bin\Debug\net6.0\ModloaderClass.pdb
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.dll
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\refint\ModloaderClass.dll
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ModloaderClass.pdb
+D:\Mathieu\Documents\My Games\Sid Meier's Civilization VI\Modloader\ModloaderClass\ModloaderClass\obj\Debug\net6.0\ref\ModloaderClass.dll

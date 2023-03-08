@@ -57,7 +57,7 @@ Copyright = '(c) 2023 wafhien. Tous droits rï¿½servï¿½s.'
 # RequiredAssemblies = @()
 
 # Fichiers de script (.ps1) exécutés dans l’environnement de l’appelant préalablement à l’importation de ce module
-# ScriptsToProcess = @()
+ScriptsToProcess = @()
 
 # Fichiers de types (.ps1xml) à charger lors de l'importation de ce module
 # TypesToProcess = @()
@@ -69,7 +69,7 @@ Copyright = '(c) 2023 wafhien. Tous droits rï¿½servï¿½s.'
 # NestedModules = @()
 
 # Fonctions à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune fonction à exporter.
-FunctionsToExport = @('listeMod','deleteMod','installMod')
+FunctionsToExport = @('listeMod','deleteMod','installMod','UpdateMod')
 
 # Applets de commande à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune applet de commande à exporter.
 CmdletsToExport = @()

@@ -11,7 +11,7 @@
     lauchGame = "Lancement de Civilization VI ..."
     lookUpdate = "recherche de mise à jour"
     goodBy = "Jeu eteint, Aurevoir!"
-    askingUpdate = "Mettre à jour le mod ?"
+    askingUpdate = "Mettre à jour le mod ? toutes modifications va être supprimé ! "
     askToDeleteModNumber = "Supprimer lequel ?"
     askToDeleteMod = "Supprimer le Mod ?"
     yes = "o"
@@ -23,4 +23,6 @@
     modInstall = "Mod installé"
     askToChangeTagModNumber = "Numero de version ?"
     askToChangeModNumber =  "Quel Mod à changer ?"
+    askToUpdateModNumber = "Quel Mod à mettre à jour ?"
+    askToUpdateMod = "mettre à jour"
 }

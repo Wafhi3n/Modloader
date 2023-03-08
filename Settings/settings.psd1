@@ -9,7 +9,7 @@
 ]'
 
     #gitUpdategitCiv of this module
-    gitUpdategitCiv = 'https://github.com/Wafhi3n/UpdateGitModCiv'
+    gitUpdategitCiv = 'https://github.com/Wafhi3n/Modloader'
 
     #mygameCivVI of this module
     mygameCivVI = '%5cMy+Games%5cSid+Meier%27s+Civilization+VI'

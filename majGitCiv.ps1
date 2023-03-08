@@ -3,6 +3,9 @@ param(
     [String]$isInstaller
 )
 
+
+
+
 #######Conf
 if((Test-Path -Path $($PSScriptRoot+"\ModloaderScript\Modloader.psd1")) -and (Test-Path -Path $($PSScriptRoot+"\ModloaderScript\Modloader.psm1"))){
     try {
@@ -16,4 +19,5 @@ if((Test-Path -Path $($PSScriptRoot+"\ModloaderScript\Modloader.psd1")) -and (Te
     Write-Host "Missing Module Files"
     exit 0;
 }
+
 
