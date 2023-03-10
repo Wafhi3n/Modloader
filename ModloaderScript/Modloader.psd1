@@ -57,7 +57,7 @@ Copyright = '(c) 2023 wafhien. Tous droits rï¿½servï¿½s.'
 # RequiredAssemblies = @()
 
 # Fichiers de script (.ps1) exécutés dans l’environnement de l’appelant préalablement à l’importation de ce module
-ScriptsToProcess = @()
+ScriptsToProcess = @('localization.ps1','conf.ps1','git.ps1','sqlite.ps1','checker.ps1','PSModFunction.ps1')
 
 # Fichiers de types (.ps1xml) à charger lors de l'importation de ce module
 # TypesToProcess = @()
